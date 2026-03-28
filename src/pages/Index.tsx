@@ -4,11 +4,11 @@ import RomanticQuiz from '@/components/RomanticQuiz';
 import ControlsHUD from '@/components/ControlsHUD';
 
 export default function Index() {
-  const [mass, setMass] = useState(1);
-  const [particleSpeed, setParticleSpeed] = useState(1);
-  const [diskRadius, setDiskRadius] = useState(3);
-  const [innerDiskTemp, setInnerDiskTemp] = useState(8000);
-  const [jetLength, setJetLength] = useState(5);
+  const [mass, setMass] = useState(0.6);
+  const [particleSpeed, setParticleSpeed] = useState(0.6);
+  const [diskRadius, setDiskRadius] = useState(4.4);
+  const [innerDiskTemp, setInnerDiskTemp] = useState(10000);
+  const [jetLength, setJetLength] = useState(15);
   const [showGravitationalLensing, setShowGravitationalLensing] = useState(true);
   const [showPhotonSphere, setShowPhotonSphere] = useState(true);
   const [showISCO, setShowISCO] = useState(true);

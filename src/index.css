@@ -84,3 +84,23 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+/* Custom scrollbar for HUD controls */
+.hud-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+.hud-scrollbar::-webkit-scrollbar-track {
+  background: hsl(260 30% 8% / 0.5);
+  border-radius: 10px;
+}
+.hud-scrollbar::-webkit-scrollbar-thumb {
+  background: hsl(330 80% 60% / 0.4);
+  border-radius: 10px;
+}
+.hud-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: hsl(330 80% 60% / 0.7);
+}
+.hud-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(330 80% 60% / 0.4) transparent;
+}
