@@ -23,6 +23,10 @@ interface ControlsHUDProps {
   setShowPhotonSphere: (v: boolean) => void;
   showISCO: boolean;
   setShowISCO: (v: boolean) => void;
+  collapsed: boolean;
+  setCollapsed: (v: boolean) => void;
+  showTimeDilation: boolean;
+  setShowTimeDilation: (v: boolean) => void;
 }
 
 const Rs = (M: number) => (2 * M).toFixed(2);
