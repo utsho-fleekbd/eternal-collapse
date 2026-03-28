@@ -81,7 +81,7 @@ function SliderControl({ label, value, min, max, step, onChange, unit }: {
     <div className="mb-3">
       <label className="mb-1 flex justify-between font-body text-xs text-muted-foreground">
         <span>{label}</span>
-        <span className="text-foreground">{value.toFixed(step < 1 ? 1 : 0)} {unit}</span>
+        <span className="text-foreground">{(value ?? 0).toFixed(step < 1 ? 1 : 0)} {unit}</span>
       </label>
       <input type="range" min={min} max={max} step={step} value={value}
         onChange={e => onChange(Number(e.target.value))}
