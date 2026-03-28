@@ -103,6 +103,7 @@ export default function ControlsHUD(props: ControlsHUDProps) {
               <ToggleControl label="Gravitational Lensing Ring" checked={showGravitationalLensing} onChange={setShowGravitationalLensing} />
               <ToggleControl label="Photon Sphere (1.5 Rₛ)" checked={showPhotonSphere} onChange={setShowPhotonSphere} />
               <ToggleControl label="ISCO (3 Rₛ)" checked={showISCO} onChange={setShowISCO} />
+              <ToggleControl label="Time Dilation Panel" checked={showTimeDilation} onChange={setShowTimeDilation} />
             </div>
           </div>
         )}
