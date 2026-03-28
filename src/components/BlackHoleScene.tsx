@@ -1,44 +1,115 @@
-import { useRef, useMemo, useCallback } from 'react';
+import { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Stars } from '@react-three/drei';
 import * as THREE from 'three';
 
-interface BlackHoleSceneProps {
+export interface BlackHoleParams {
   mass: number;
   particleSpeed: number;
   diskRadius: number;
   celebrationMode: boolean;
+  innerDiskTemp: number;
+  jetLength: number;
+  showGravitationalLensing: boolean;
+  showPhotonSphere: boolean;
+  showISCO: boolean;
 }
 
-function BlackHoleSphere() {
+/* ── Schwarzschild helpers ─────────────────────────────── */
+const R_s = (M: number) => 2 * M; // Schwarzschild radius (G=c=1 units, scaled)
+const R_photon = (M: number) => 1.5 * R_s(M);
+const R_isco = (M: number) => 3 * R_s(M);
+
+/* ── Black Hole Sphere (event horizon) ─────────────────── */
+function EventHorizon({ mass }: { mass: number }) {
+  const rs = R_s(mass);
   const meshRef = useRef<THREE.Mesh>(null);
   return (
     <mesh ref={meshRef}>
-      <sphereGeometry args={[1, 64, 64]} />
+      <sphereGeometry args={[rs, 64, 64]} />
       <meshBasicMaterial color="#000000" />
     </mesh>
   );
 }
 
-function EventHorizonGlow() {
+/* ── Event Horizon Glow (Hawking-radiation-inspired ring) */
+function EventHorizonGlow({ mass }: { mass: number }) {
+  const rs = R_s(mass);
   const ref = useRef<THREE.Mesh>(null);
   useFrame(({ clock }) => {
     if (ref.current) {
-      const s = 1.05 + Math.sin(clock.elapsedTime * 0.5) * 0.02;
+      const s = 1.0 + Math.sin(clock.elapsedTime * 0.5) * 0.015;
       ref.current.scale.set(s, s, s);
     }
   });
   return (
     <mesh ref={ref}>
-      <sphereGeometry args={[1.1, 64, 64]} />
-      <meshBasicMaterial color="#1a0020" transparent opacity={0.6} />
+      <sphereGeometry args={[rs * 1.02, 64, 64]} />
+      <meshBasicMaterial color="#1a0a00" transparent opacity={0.5} />
     </mesh>
   );
 }
 
-function AccretionDisk({ mass, particleSpeed, diskRadius, celebrationMode }: BlackHoleSceneProps) {
-  const count = 3000;
+/* ── Photon Sphere ─────────────────────────────────────── */
+function PhotonSphere({ mass, visible }: { mass: number; visible: boolean }) {
+  const rp = R_photon(mass);
+  const ref = useRef<THREE.Mesh>(null);
+  useFrame(({ clock }) => {
+    if (ref.current) {
+      ref.current.rotation.y = clock.elapsedTime * 0.3;
+      ref.current.rotation.x = Math.PI / 2 + Math.sin(clock.elapsedTime * 0.15) * 0.03;
+    }
+  });
+  if (!visible) return null;
+  return (
+    <mesh ref={ref} rotation={[Math.PI / 2, 0, 0]}>
+      <torusGeometry args={[rp, 0.015, 16, 128]} />
+      <meshBasicMaterial color="#ffcc00" transparent opacity={0.25} />
+    </mesh>
+  );
+}
+
+/* ── ISCO Ring ─────────────────────────────────────────── */
+function ISCORing({ mass, visible }: { mass: number; visible: boolean }) {
+  const risco = R_isco(mass);
+  const ref = useRef<THREE.Mesh>(null);
+  useFrame(({ clock }) => {
+    if (ref.current) {
+      ref.current.rotation.x = Math.PI / 2 + Math.sin(clock.elapsedTime * 0.1) * 0.02;
+    }
+  });
+  if (!visible) return null;
+  return (
+    <mesh ref={ref} rotation={[Math.PI / 2, 0, 0]}>
+      <torusGeometry args={[risco, 0.012, 16, 128]} />
+      <meshBasicMaterial color="#00ccff" transparent opacity={0.2} />
+    </mesh>
+  );
+}
+
+/* ── Gravitational Lensing Ring ────────────────────────── */
+function GravitationalLensRing({ mass, visible }: { mass: number; visible: boolean }) {
+  const ref = useRef<THREE.Mesh>(null);
+  const rs = R_s(mass);
+  useFrame(({ clock }) => {
+    if (ref.current) {
+      ref.current.rotation.x = Math.PI / 2 + Math.sin(clock.elapsedTime * 0.2) * 0.05;
+    }
+  });
+  if (!visible) return null;
+  return (
+    <mesh ref={ref} rotation={[Math.PI / 2, 0, 0]}>
+      <torusGeometry args={[rs * 1.3, 0.025, 16, 100]} />
+      <meshBasicMaterial color="#ffaa44" transparent opacity={0.15} />
+    </mesh>
+  );
+}
+
+/* ── Accretion Disk ────────────────────────────────────── */
+function AccretionDisk({ mass, particleSpeed, diskRadius, celebrationMode, innerDiskTemp }: BlackHoleParams) {
+  const count = 4000;
   const pointsRef = useRef<THREE.Points>(null);
+  const risco = R_isco(mass);
 
   const { positions, colors, angles, radii, speeds } = useMemo(() => {
     const positions = new Float32Array(count * 3);
@@ -47,34 +118,45 @@ function AccretionDisk({ mass, particleSpeed, diskRadius, celebrationMode }: Bla
     const radii = new Float32Array(count);
     const speeds = new Float32Array(count);
     const color = new THREE.Color();
+    const innerR = Math.max(risco, diskRadius * 0.5);
 
     for (let i = 0; i < count; i++) {
-      const r = diskRadius + Math.random() * diskRadius * 1.5;
+      const r = innerR + Math.random() * diskRadius * 2;
       const angle = Math.random() * Math.PI * 2;
       radii[i] = r;
       angles[i] = angle;
-      // Schwarzschild-inspired: speed ~ 1/sqrt(r)
-      speeds[i] = (0.3 + Math.random() * 0.3) / Math.sqrt(r / diskRadius);
+      // Keplerian: v ∝ 1/√r
+      speeds[i] = (0.3 + Math.random() * 0.2) / Math.sqrt(r / innerR);
 
       positions[i * 3] = Math.cos(angle) * r;
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 0.3;
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 0.15;
       positions[i * 3 + 2] = Math.sin(angle) * r;
 
-      const hue = 0.9 + Math.random() * 0.1; // pink-purple range
-      color.setHSL(hue, 0.8, 0.5 + Math.random() * 0.3);
+      // Blackbody-inspired coloring: hotter near center
+      const tempFactor = 1 - (r - innerR) / (diskRadius * 2);
+      const temp = innerDiskTemp * tempFactor;
+      if (temp > 8000) {
+        color.setHSL(0.6, 0.3, 0.7 + Math.random() * 0.2); // blue-white
+      } else if (temp > 5000) {
+        color.setHSL(0.12, 0.6, 0.6 + Math.random() * 0.2); // yellow-white
+      } else if (temp > 3000) {
+        color.setHSL(0.08, 0.8, 0.4 + Math.random() * 0.2); // orange
+      } else {
+        color.setHSL(0.02, 0.7, 0.3 + Math.random() * 0.15); // deep red
+      }
       colors[i * 3] = color.r;
       colors[i * 3 + 1] = color.g;
       colors[i * 3 + 2] = color.b;
     }
     return { positions, colors, angles, radii, speeds };
-  }, [count, diskRadius]);
+  }, [count, diskRadius, risco, innerDiskTemp]);
 
   useFrame((_, delta) => {
     if (!pointsRef.current) return;
     const geo = pointsRef.current.geometry;
     const pos = geo.attributes.position.array as Float32Array;
     const col = geo.attributes.color.array as Float32Array;
-    const speedMult = particleSpeed * (celebrationMode ? 2.5 : 1) * mass;
+    const speedMult = particleSpeed * (celebrationMode ? 2 : 1) * mass;
     const color = new THREE.Color();
 
     for (let i = 0; i < count; i++) {
@@ -84,7 +166,6 @@ function AccretionDisk({ mass, particleSpeed, diskRadius, celebrationMode }: Bla
       pos[i * 3 + 2] = Math.sin(angles[i]) * r;
 
       if (celebrationMode) {
-        // Heart-like pulsing colors
         const t = angles[i] + Date.now() * 0.001;
         const hue = (Math.sin(t) * 0.05 + 0.95) % 1;
         color.setHSL(hue, 1, 0.6 + Math.sin(t * 3) * 0.2);
@@ -104,10 +185,10 @@ function AccretionDisk({ mass, particleSpeed, diskRadius, celebrationMode }: Bla
         <bufferAttribute attach="attributes-color" args={[colors, 3]} count={count} itemSize={3} />
       </bufferGeometry>
       <pointsMaterial
-        size={celebrationMode ? 0.08 : 0.05}
+        size={celebrationMode ? 0.06 : 0.04}
         vertexColors
         transparent
-        opacity={0.85}
+        opacity={0.9}
         blending={THREE.AdditiveBlending}
         depthWrite={false}
       />
@@ -115,10 +196,54 @@ function AccretionDisk({ mass, particleSpeed, diskRadius, celebrationMode }: Bla
   );
 }
 
+/* ── Relativistic Jets ─────────────────────────────────── */
+function RelativisticJets({ mass, jetLength }: { mass: number; jetLength: number }) {
+  const ref = useRef<THREE.Points>(null);
+  const count = 600;
+  const rs = R_s(mass);
+
+  const positions = useMemo(() => {
+    const arr = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
+      const spread = 0.15 + Math.random() * 0.1;
+      const y = (Math.random() * jetLength) * (i % 2 === 0 ? 1 : -1);
+      const angle = Math.random() * Math.PI * 2;
+      arr[i * 3] = Math.cos(angle) * spread * (rs * 0.3);
+      arr[i * 3 + 1] = y;
+      arr[i * 3 + 2] = Math.sin(angle) * spread * (rs * 0.3);
+    }
+    return arr;
+  }, [count, jetLength, rs]);
+
+  useFrame((_, delta) => {
+    if (!ref.current) return;
+    const pos = ref.current.geometry.attributes.position.array as Float32Array;
+    for (let i = 0; i < count; i++) {
+      const dir = i % 2 === 0 ? 1 : -1;
+      pos[i * 3 + 1] += dir * delta * 3;
+      if (Math.abs(pos[i * 3 + 1]) > jetLength) {
+        pos[i * 3 + 1] = dir * 0.5;
+      }
+    }
+    ref.current.geometry.attributes.position.needsUpdate = true;
+  });
+
+  if (jetLength <= 0) return null;
+
+  return (
+    <points ref={ref}>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" args={[positions, 3]} count={count} itemSize={3} />
+      </bufferGeometry>
+      <pointsMaterial size={0.03} color="#6699ff" transparent opacity={0.4} blending={THREE.AdditiveBlending} depthWrite={false} />
+    </points>
+  );
+}
+
+/* ── Floating Hearts (celebration) ─────────────────────── */
 function FloatingHearts({ active }: { active: boolean }) {
   const count = 50;
   const ref = useRef<THREE.Points>(null);
-
   const positions = useMemo(() => {
     const arr = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
@@ -140,7 +265,6 @@ function FloatingHearts({ active }: { active: boolean }) {
   });
 
   if (!active) return null;
-
   return (
     <points ref={ref}>
       <bufferGeometry>
@@ -151,34 +275,24 @@ function FloatingHearts({ active }: { active: boolean }) {
   );
 }
 
-function GravitationalLensRing() {
-  const ref = useRef<THREE.Mesh>(null);
-  useFrame(({ clock }) => {
-    if (ref.current) {
-      ref.current.rotation.x = Math.PI / 2 + Math.sin(clock.elapsedTime * 0.2) * 0.05;
-    }
-  });
-  return (
-    <mesh ref={ref} rotation={[Math.PI / 2, 0, 0]}>
-      <torusGeometry args={[1.6, 0.02, 16, 100]} />
-      <meshBasicMaterial color="#8b5cf6" transparent opacity={0.3} />
-    </mesh>
-  );
-}
-
-export default function BlackHoleScene({ mass, particleSpeed, diskRadius, celebrationMode }: BlackHoleSceneProps) {
+/* ── Main Scene ────────────────────────────────────────── */
+export default function BlackHoleScene(props: BlackHoleParams) {
+  const { mass, celebrationMode, showGravitationalLensing, showPhotonSphere, showISCO, jetLength } = props;
   return (
     <div className="fixed inset-0">
       <Canvas camera={{ position: [0, 5, 10], fov: 60 }}>
-        <color attach="background" args={['#050010']} />
-        <ambientLight intensity={0.1} />
-        <Stars radius={100} depth={50} count={5000} factor={4} saturation={0.5} fade speed={1} />
-        <BlackHoleSphere />
-        <EventHorizonGlow />
-        <GravitationalLensRing />
-        <AccretionDisk mass={mass} particleSpeed={particleSpeed} diskRadius={diskRadius} celebrationMode={celebrationMode} />
+        <color attach="background" args={['#020008']} />
+        <ambientLight intensity={0.05} />
+        <Stars radius={100} depth={50} count={5000} factor={4} saturation={0.2} fade speed={0.5} />
+        <EventHorizon mass={mass} />
+        <EventHorizonGlow mass={mass} />
+        <PhotonSphere mass={mass} visible={showPhotonSphere} />
+        <ISCORing mass={mass} visible={showISCO} />
+        <GravitationalLensRing mass={mass} visible={showGravitationalLensing} />
+        <AccretionDisk {...props} />
+        <RelativisticJets mass={mass} jetLength={jetLength} />
         <FloatingHearts active={celebrationMode} />
-        <OrbitControls enablePan enableZoom enableRotate autoRotate autoRotateSpeed={celebrationMode ? 2 : 0.5} />
+        <OrbitControls enablePan enableZoom enableRotate autoRotate autoRotateSpeed={celebrationMode ? 2 : 0.3} />
       </Canvas>
     </div>
   );

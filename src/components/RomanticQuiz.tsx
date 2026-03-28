@@ -12,7 +12,7 @@ export default function RomanticQuiz({ onSuccess }: RomanticQuizProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (answer1.trim().toLowerCase() === 'utsho' && answer2.trim().toLowerCase() === 'utsho') {
+    if (answer1.trim().toLowerCase() === 'puja' && answer2.trim().toLowerCase() === 'utsho') {
       setVisible(false);
       onSuccess();
     } else {
