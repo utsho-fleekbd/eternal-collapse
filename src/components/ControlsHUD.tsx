@@ -34,42 +34,52 @@ export default function ControlsHUD(props: ControlsHUDProps) {
   } = props;
 
   const [showInfo, setShowInfo] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <div className="fixed bottom-4 right-4 z-40 w-72 rounded-2xl border border-border bg-card/85 p-5 backdrop-blur-lg max-h-[85vh] overflow-y-auto">
-      <h3 className="mb-1 font-display text-xl text-primary">✦ Simulation Controls</h3>
+    <div className="fixed bottom-4 right-4 z-40 w-72 rounded-2xl border border-border bg-card/85 backdrop-blur-lg max-h-[85vh] overflow-hidden">
       <button
-        onClick={() => setShowInfo(!showInfo)}
-        className="mb-3 font-body text-xs text-muted-foreground underline hover:text-foreground transition-colors"
+        onClick={() => setCollapsed(!collapsed)}
+        className="flex w-full items-center justify-between p-4 pb-2 cursor-pointer"
       >
-        {showInfo ? 'Hide' : 'Show'} physics info
+        <h3 className="font-display text-xl text-primary">✦ Controls</h3>
+        <span className="text-muted-foreground text-lg transition-transform" style={{ transform: collapsed ? 'rotate(0deg)' : 'rotate(180deg)' }}>▲</span>
       </button>
 
-      {showInfo && (
-        <div className="mb-4 rounded-xl border border-border bg-muted/50 p-3 font-body text-xs text-muted-foreground space-y-1">
-          <p><strong className="text-foreground">Schwarzschild Radius</strong> R<sub>s</sub> = 2GM/c² → <span className="text-accent">{Rs(mass)}</span></p>
-          <p><strong className="text-foreground">Photon Sphere</strong> R<sub>ph</sub> = 1.5 R<sub>s</sub> → <span className="text-accent">{Rp(mass)}</span></p>
-          <p><strong className="text-foreground">ISCO</strong> R<sub>isco</sub> = 3 R<sub>s</sub> → <span className="text-accent">{Risco(mass)}</span></p>
-          <p><strong className="text-foreground">Inner Disk Temp</strong> → <span className="text-accent">{innerDiskTemp} K</span></p>
-          <p className="pt-1 text-[10px] leading-tight opacity-70">
-            Particles follow Keplerian orbits (v ∝ 1/√r). Colors approximate blackbody radiation from accretion heating. Event horizon, photon sphere, and ISCO scale with mass.
-          </p>
+      {!collapsed && (
+        <div className="px-5 pb-5 pt-1 overflow-y-auto max-h-[75vh]">
+          <button
+            onClick={() => setShowInfo(!showInfo)}
+            className="mb-3 font-body text-xs text-muted-foreground underline hover:text-foreground transition-colors"
+          >
+            {showInfo ? 'Hide' : 'Show'} physics info
+          </button>
+
+          {showInfo && (
+            <div className="mb-4 rounded-xl border border-border bg-muted/50 p-3 font-body text-xs text-muted-foreground space-y-1">
+              <p><strong className="text-foreground">Schwarzschild Radius</strong> R<sub>s</sub> = 2GM/c² → <span className="text-accent">{Rs(mass)}</span></p>
+              <p><strong className="text-foreground">Photon Sphere</strong> R<sub>ph</sub> = 1.5 R<sub>s</sub> → <span className="text-accent">{Rp(mass)}</span></p>
+              <p><strong className="text-foreground">ISCO</strong> R<sub>isco</sub> = 3 R<sub>s</sub> → <span className="text-accent">{Risco(mass)}</span></p>
+              <p><strong className="text-foreground">Inner Disk Temp</strong> → <span className="text-accent">{innerDiskTemp} K</span></p>
+              <p className="pt-1 text-[10px] leading-tight opacity-70">
+                Particles follow Keplerian orbits (v ∝ 1/√r). Colors approximate blackbody radiation from accretion heating. Event horizon, photon sphere, and ISCO scale with mass.
+              </p>
+            </div>
+          )}
+
+          <SliderControl label="Black Hole Mass (M)" value={mass} min={0.5} max={3} step={0.1} onChange={setMass} unit="M☉" />
+          <SliderControl label="Orbital Speed" value={particleSpeed} min={0.2} max={3} step={0.1} onChange={setParticleSpeed} unit="×" />
+          <SliderControl label="Disk Outer Radius" value={diskRadius} min={2} max={8} step={0.1} onChange={setDiskRadius} unit="r" />
+          <SliderControl label="Inner Disk Temp" value={innerDiskTemp} min={2000} max={15000} step={500} onChange={setInnerDiskTemp} unit="K" />
+          <SliderControl label="Jet Length" value={jetLength} min={0} max={15} step={0.5} onChange={setJetLength} unit="r" />
+
+          <div className="mt-3 space-y-2">
+            <ToggleControl label="Gravitational Lensing Ring" checked={showGravitationalLensing} onChange={setShowGravitationalLensing} />
+            <ToggleControl label="Photon Sphere (1.5 Rₛ)" checked={showPhotonSphere} onChange={setShowPhotonSphere} />
+            <ToggleControl label="ISCO (3 Rₛ)" checked={showISCO} onChange={setShowISCO} />
+          </div>
         </div>
       )}
-
-      {/* Sliders */}
-      <SliderControl label="Black Hole Mass (M)" value={mass} min={0.5} max={3} step={0.1} onChange={setMass} unit="M☉" />
-      <SliderControl label="Orbital Speed" value={particleSpeed} min={0.2} max={3} step={0.1} onChange={setParticleSpeed} unit="×" />
-      <SliderControl label="Disk Outer Radius" value={diskRadius} min={2} max={8} step={0.1} onChange={setDiskRadius} unit="r" />
-      <SliderControl label="Inner Disk Temp" value={innerDiskTemp} min={2000} max={15000} step={500} onChange={setInnerDiskTemp} unit="K" />
-      <SliderControl label="Jet Length" value={jetLength} min={0} max={15} step={0.5} onChange={setJetLength} unit="r" />
-
-      {/* Toggles */}
-      <div className="mt-3 space-y-2">
-        <ToggleControl label="Gravitational Lensing Ring" checked={showGravitationalLensing} onChange={setShowGravitationalLensing} />
-        <ToggleControl label="Photon Sphere (1.5 Rₛ)" checked={showPhotonSphere} onChange={setShowPhotonSphere} />
-        <ToggleControl label="ISCO (3 Rₛ)" checked={showISCO} onChange={setShowISCO} />
-      </div>
     </div>
   );
 }
