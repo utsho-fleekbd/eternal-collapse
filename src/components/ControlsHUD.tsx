@@ -55,14 +55,6 @@ export default function ControlsHUD(props: ControlsHUDProps) {
     showGravitationalLensing, setShowGravitationalLensing,
     showPhotonSphere, setShowPhotonSphere,
     showISCO, setShowISCO,
-  } = props;
-  const {
-    mass, setMass, particleSpeed, setParticleSpeed,
-    diskRadius, setDiskRadius, innerDiskTemp, setInnerDiskTemp,
-    jetLength, setJetLength,
-    showGravitationalLensing, setShowGravitationalLensing,
-    showPhotonSphere, setShowPhotonSphere,
-    showISCO, setShowISCO,
     collapsed, setCollapsed,
     showTimeDilation, setShowTimeDilation,
   } = props;
