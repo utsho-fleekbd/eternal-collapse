@@ -35,7 +35,7 @@ export default function CosmicQuiz({ onSuccess }: CosmicQuizProps) {
         style={{ animation: "pulse-glow 3s ease-in-out infinite" }}
       >
         <h2 className="mb-2 text-center font-display text-4xl font-bold text-primary flex items-center justify-around">
-          <Sparkle /> A Cosmic CosmicQuiz <Sparkle />
+          <Sparkle /> A Cosmic Quiz <Sparkle />
         </h2>
         <p className="mb-6 text-center font-body text-sm text-muted-foreground">
           Answer correctly to unlock the universe's secrets
