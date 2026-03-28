@@ -45,6 +45,7 @@ const toggleTooltips: Record<string, string> = {
   'Gravitational Lensing Ring': 'Simulates the Einstein ring — light from behind the black hole bent around it by spacetime curvature.',
   'Photon Sphere (1.5 Rₛ)': 'At r = 1.5 Rₛ, photons can orbit the black hole. Any closer and light spirals inward.',
   'ISCO (3 Rₛ)': 'Innermost Stable Circular Orbit — the closest stable orbit for matter. Inside this, particles plunge into the event horizon.',
+  'Time Dilation Panel': 'Shows gravitational time dilation τ/t = √(1 − Rₛ/r) at various radii. Clocks tick slower near the event horizon.',
 };
 
 export default function ControlsHUD(props: ControlsHUDProps) {
