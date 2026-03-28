@@ -1,12 +1,8 @@
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Quicksand:wght@300;400;500;600&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
-
-@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Quicksand:wght@300;400;500;600&display=swap');
 
 @layer base {
   :root {
@@ -45,8 +41,8 @@ All colors MUST be HSL.
     --romantic-orange: 20 80% 60%;
     --romantic-glow: 330 100% 70%;
 
-    --font-display: 'Dancing Script', cursive;
-    --font-body: 'Quicksand', sans-serif;
+    --font-display: "Dancing Script", cursive;
+    --font-body: "Quicksand", sans-serif;
 
     --sidebar-background: 260 30% 6%;
     --sidebar-foreground: 330 100% 95%;
@@ -60,19 +56,41 @@ All colors MUST be HSL.
 }
 
 @keyframes float-heart {
-  0%, 100% { transform: translateY(0) rotate(0deg); opacity: 1; }
-  50% { transform: translateY(-20px) rotate(10deg); opacity: 0.7; }
-  100% { transform: translateY(-100vh) rotate(-10deg); opacity: 0; }
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-20px) rotate(10deg);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(-100vh) rotate(-10deg);
+    opacity: 0;
+  }
 }
 
 @keyframes twinkle {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 1; }
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px hsl(330 80% 60% / 0.3); }
-  50% { box-shadow: 0 0 40px hsl(330 80% 60% / 0.6), 0 0 80px hsl(280 60% 50% / 0.3); }
+  0%,
+  100% {
+    box-shadow: 0 0 20px hsl(330 80% 60% / 0.3);
+  }
+  50% {
+    box-shadow:
+      0 0 40px hsl(330 80% 60% / 0.6),
+      0 0 80px hsl(280 60% 50% / 0.3);
+  }
 }
 
 @layer base {

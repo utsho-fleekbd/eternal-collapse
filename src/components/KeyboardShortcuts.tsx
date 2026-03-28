@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
 interface KeyboardShortcutsProps {
   onToggleControls: () => void;
@@ -20,53 +20,64 @@ export function useKeyboardShortcuts({
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
       // Ignore if typing in an input
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if (
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement
+      )
+        return;
 
       switch (e.key.toLowerCase()) {
-        case 'c':
+        case "c":
           e.preventDefault();
           onToggleControls();
           break;
-        case 't':
+        case "t":
           e.preventDefault();
           onToggleTimeDilation();
           break;
-        case 'g':
+        case "g":
           e.preventDefault();
           onToggleLensing();
           break;
-        case 'p':
+        case "p":
           e.preventDefault();
           onTogglePhotonSphere();
           break;
-        case 'i':
+        case "i":
           e.preventDefault();
           onToggleISCO();
           break;
-        case 'r':
+        case "r":
           e.preventDefault();
           onResetDefaults();
           break;
-        case '?':
+        case "?":
           e.preventDefault();
           // Handled by parent to toggle help
-          document.dispatchEvent(new CustomEvent('toggle-shortcuts-help'));
+          document.dispatchEvent(new CustomEvent("toggle-shortcuts-help"));
           break;
       }
     }
-    window.addEventListener('keydown', handleKey);
-    return () => window.removeEventListener('keydown', handleKey);
-  }, [onToggleControls, onToggleTimeDilation, onToggleLensing, onTogglePhotonSphere, onToggleISCO, onResetDefaults]);
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [
+    onToggleControls,
+    onToggleTimeDilation,
+    onToggleLensing,
+    onTogglePhotonSphere,
+    onToggleISCO,
+    onResetDefaults,
+  ]);
 }
 
 const shortcuts = [
-  { key: 'C', desc: 'Toggle controls panel' },
-  { key: 'T', desc: 'Toggle time dilation panel' },
-  { key: 'G', desc: 'Toggle gravitational lensing' },
-  { key: 'P', desc: 'Toggle photon sphere' },
-  { key: 'I', desc: 'Toggle ISCO ring' },
-  { key: 'R', desc: 'Reset to defaults' },
-  { key: '?', desc: 'Show/hide this help' },
+  { key: "C", desc: "Toggle controls panel" },
+  { key: "T", desc: "Toggle time dilation panel" },
+  { key: "G", desc: "Toggle gravitational lensing" },
+  { key: "P", desc: "Toggle photon sphere" },
+  { key: "I", desc: "Toggle ISCO ring" },
+  { key: "R", desc: "Reset to defaults" },
+  { key: "?", desc: "Show/hide this help" },
 ];
 
 export function ShortcutsHelp({ visible }: { visible: boolean }) {
