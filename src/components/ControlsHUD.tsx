@@ -23,6 +23,10 @@ interface ControlsHUDProps {
   setShowPhotonSphere: (v: boolean) => void;
   showISCO: boolean;
   setShowISCO: (v: boolean) => void;
+  collapsed: boolean;
+  setCollapsed: (v: boolean) => void;
+  showTimeDilation: boolean;
+  setShowTimeDilation: (v: boolean) => void;
 }
 
 const Rs = (M: number) => (2 * M).toFixed(2);
@@ -41,6 +45,7 @@ const toggleTooltips: Record<string, string> = {
   'Gravitational Lensing Ring': 'Simulates the Einstein ring — light from behind the black hole bent around it by spacetime curvature.',
   'Photon Sphere (1.5 Rₛ)': 'At r = 1.5 Rₛ, photons can orbit the black hole. Any closer and light spirals inward.',
   'ISCO (3 Rₛ)': 'Innermost Stable Circular Orbit — the closest stable orbit for matter. Inside this, particles plunge into the event horizon.',
+  'Time Dilation Panel': 'Shows gravitational time dilation τ/t = √(1 − Rₛ/r) at various radii. Clocks tick slower near the event horizon.',
 };
 
 export default function ControlsHUD(props: ControlsHUDProps) {
@@ -51,10 +56,11 @@ export default function ControlsHUD(props: ControlsHUDProps) {
     showGravitationalLensing, setShowGravitationalLensing,
     showPhotonSphere, setShowPhotonSphere,
     showISCO, setShowISCO,
+    collapsed, setCollapsed,
+    showTimeDilation, setShowTimeDilation,
   } = props;
 
   const [showInfo, setShowInfo] = useState(false);
-  const [collapsed, setCollapsed] = useState(false);
 
   return (
     <TooltipProvider delayDuration={300}>
@@ -98,6 +104,7 @@ export default function ControlsHUD(props: ControlsHUDProps) {
               <ToggleControl label="Gravitational Lensing Ring" checked={showGravitationalLensing} onChange={setShowGravitationalLensing} />
               <ToggleControl label="Photon Sphere (1.5 Rₛ)" checked={showPhotonSphere} onChange={setShowPhotonSphere} />
               <ToggleControl label="ISCO (3 Rₛ)" checked={showISCO} onChange={setShowISCO} />
+              <ToggleControl label="Time Dilation Panel" checked={showTimeDilation} onChange={setShowTimeDilation} />
             </div>
           </div>
         )}
