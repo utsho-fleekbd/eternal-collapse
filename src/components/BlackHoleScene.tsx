@@ -293,6 +293,39 @@ export default function BlackHoleScene(props: BlackHoleParams) {
         <AccretionDisk {...props} />
         <RelativisticJets mass={mass} jetLength={jetLength} />
         <FloatingHearts active={celebrationMode} />
+
+        {/* Scene tooltips */}
+        <SceneTooltip
+          position={[R_s(mass) + 0.3, 0.5, 0]}
+          label="Event Horizon"
+          description="The boundary beyond which nothing — not even light — can escape. Radius = 2GM/c²."
+          color="hsl(0,0%,50%)"
+        />
+        {showPhotonSphere && (
+          <SceneTooltip
+            position={[R_photon(mass), 0.8, 0]}
+            label="Photon Sphere"
+            description="At 1.5× the Schwarzschild radius, photons orbit the black hole in unstable circular orbits."
+            color="hsl(50,100%,50%)"
+          />
+        )}
+        {showISCO && (
+          <SceneTooltip
+            position={[R_isco(mass), 0.8, 0]}
+            label="ISCO"
+            description="Innermost Stable Circular Orbit (3Rₛ). The last stable orbit before matter plunges inward."
+            color="hsl(190,100%,50%)"
+          />
+        )}
+        {jetLength > 0 && (
+          <SceneTooltip
+            position={[0, jetLength * 0.6, 0]}
+            label="Relativistic Jet"
+            description="Collimated beams of plasma ejected at near light-speed along the black hole's spin axis."
+            color="hsl(220,100%,70%)"
+          />
+        )}
+
         <OrbitControls enablePan enableZoom enableRotate autoRotate autoRotateSpeed={celebrationMode ? 2 : 0.3} />
       </Canvas>
     </div>
