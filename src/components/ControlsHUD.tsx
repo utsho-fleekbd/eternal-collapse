@@ -56,9 +56,18 @@ export default function ControlsHUD(props: ControlsHUDProps) {
     showPhotonSphere, setShowPhotonSphere,
     showISCO, setShowISCO,
   } = props;
+  const {
+    mass, setMass, particleSpeed, setParticleSpeed,
+    diskRadius, setDiskRadius, innerDiskTemp, setInnerDiskTemp,
+    jetLength, setJetLength,
+    showGravitationalLensing, setShowGravitationalLensing,
+    showPhotonSphere, setShowPhotonSphere,
+    showISCO, setShowISCO,
+    collapsed, setCollapsed,
+    showTimeDilation, setShowTimeDilation,
+  } = props;
 
   const [showInfo, setShowInfo] = useState(false);
-  const [collapsed, setCollapsed] = useState(false);
 
   return (
     <TooltipProvider delayDuration={300}>
