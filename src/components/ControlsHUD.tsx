@@ -29,6 +29,18 @@ interface ControlsHUDProps {
   setCollapsed: (v: boolean) => void;
   showTimeDilation: boolean;
   setShowTimeDilation: (v: boolean) => void;
+  showDraggableClock: boolean;
+  setShowDraggableClock: (v: boolean) => void;
+  showGeodesicTracer: boolean;
+  setShowGeodesicTracer: (v: boolean) => void;
+  showRedshift: boolean;
+  setShowRedshift: (v: boolean) => void;
+  showSpaghettification: boolean;
+  setShowSpaghettification: (v: boolean) => void;
+  showSpaceship: boolean;
+  setShowSpaceship: (v: boolean) => void;
+  showPhotonTracer: boolean;
+  setShowPhotonTracer: (v: boolean) => void;
 }
 
 const Rs = (M: number) => (2 * M).toFixed(2);
@@ -57,6 +69,18 @@ const toggleTooltips: Record<string, string> = {
     "Innermost Stable Circular Orbit — the closest stable orbit for matter. Inside this, particles plunge into the event horizon.",
   "Time Dilation Panel":
     "Shows gravitational time dilation τ/t = √(1 − Rₛ/r) at various radii. Clocks tick slower near the event horizon.",
+  "Draggable Clock":
+    "Interactive dual analog clocks — drag the radius slider and watch proper time tick slower near the horizon.",
+  "Geodesic Tracer":
+    "Launch test particles and photons that follow Schwarzschild geodesics. Watch bound orbits, plunges, and scattering.",
+  "Gravitational Redshift":
+    "Colored rings showing how emitted blue light (450nm) is redshifted as it escapes. λ_obs = λ_emit / √(1 − Rₛ/r).",
+  "Spaghettification":
+    "Drop an object toward the black hole. Tidal forces stretch it radially and compress it laterally (ΔF ∝ 2GM·Δr/r³).",
+  "Spaceship Orbiter":
+    "A spacecraft in circular orbit with live proper time vs coordinate time comparison. Move it to different radii.",
+  "Photon Shooter":
+    "Fire photons at different impact parameters. b < b_crit → captured, b ≈ b_crit → orbits, b > b_crit → scattered.",
 };
 
 export default function ControlsHUD(props: ControlsHUDProps) {
@@ -81,6 +105,18 @@ export default function ControlsHUD(props: ControlsHUDProps) {
     setCollapsed,
     showTimeDilation,
     setShowTimeDilation,
+    showDraggableClock,
+    setShowDraggableClock,
+    showGeodesicTracer,
+    setShowGeodesicTracer,
+    showRedshift,
+    setShowRedshift,
+    showSpaghettification,
+    setShowSpaghettification,
+    showSpaceship,
+    setShowSpaceship,
+    showPhotonTracer,
+    setShowPhotonTracer,
   } = props;
 
   const [showInfo, setShowInfo] = useState(false);
@@ -188,6 +224,7 @@ export default function ControlsHUD(props: ControlsHUDProps) {
             />
 
             <div className="mt-3 space-y-2">
+              <p className="font-body text-[10px] text-muted-foreground/60 uppercase tracking-wider mt-1">Overlays</p>
               <ToggleControl
                 label="Gravitational Lensing Ring"
                 checked={showGravitationalLensing}
@@ -207,6 +244,38 @@ export default function ControlsHUD(props: ControlsHUDProps) {
                 label="Time Dilation Panel"
                 checked={showTimeDilation}
                 onChange={setShowTimeDilation}
+              />
+              <ToggleControl
+                label="Draggable Clock"
+                checked={showDraggableClock}
+                onChange={setShowDraggableClock}
+              />
+              <ToggleControl
+                label="Gravitational Redshift"
+                checked={showRedshift}
+                onChange={setShowRedshift}
+              />
+
+              <p className="font-body text-[10px] text-muted-foreground/60 uppercase tracking-wider mt-3 pt-2 border-t border-border/30">Simulations</p>
+              <ToggleControl
+                label="Geodesic Tracer"
+                checked={showGeodesicTracer}
+                onChange={setShowGeodesicTracer}
+              />
+              <ToggleControl
+                label="Spaghettification"
+                checked={showSpaghettification}
+                onChange={setShowSpaghettification}
+              />
+              <ToggleControl
+                label="Spaceship Orbiter"
+                checked={showSpaceship}
+                onChange={setShowSpaceship}
+              />
+              <ToggleControl
+                label="Photon Shooter"
+                checked={showPhotonTracer}
+                onChange={setShowPhotonTracer}
               />
             </div>
           </div>
