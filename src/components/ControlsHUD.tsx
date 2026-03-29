@@ -29,6 +29,18 @@ interface ControlsHUDProps {
   setCollapsed: (v: boolean) => void;
   showTimeDilation: boolean;
   setShowTimeDilation: (v: boolean) => void;
+  showDraggableClock: boolean;
+  setShowDraggableClock: (v: boolean) => void;
+  showGeodesicTracer: boolean;
+  setShowGeodesicTracer: (v: boolean) => void;
+  showRedshift: boolean;
+  setShowRedshift: (v: boolean) => void;
+  showSpaghettification: boolean;
+  setShowSpaghettification: (v: boolean) => void;
+  showSpaceship: boolean;
+  setShowSpaceship: (v: boolean) => void;
+  showPhotonTracer: boolean;
+  setShowPhotonTracer: (v: boolean) => void;
 }
 
 const Rs = (M: number) => (2 * M).toFixed(2);
