@@ -224,6 +224,7 @@ export default function ControlsHUD(props: ControlsHUDProps) {
             />
 
             <div className="mt-3 space-y-2">
+              <p className="font-body text-[10px] text-muted-foreground/60 uppercase tracking-wider mt-1">Overlays</p>
               <ToggleControl
                 label="Gravitational Lensing Ring"
                 checked={showGravitationalLensing}
@@ -243,6 +244,38 @@ export default function ControlsHUD(props: ControlsHUDProps) {
                 label="Time Dilation Panel"
                 checked={showTimeDilation}
                 onChange={setShowTimeDilation}
+              />
+              <ToggleControl
+                label="Draggable Clock"
+                checked={showDraggableClock}
+                onChange={setShowDraggableClock}
+              />
+              <ToggleControl
+                label="Gravitational Redshift"
+                checked={showRedshift}
+                onChange={setShowRedshift}
+              />
+
+              <p className="font-body text-[10px] text-muted-foreground/60 uppercase tracking-wider mt-3 pt-2 border-t border-border/30">Simulations</p>
+              <ToggleControl
+                label="Geodesic Tracer"
+                checked={showGeodesicTracer}
+                onChange={setShowGeodesicTracer}
+              />
+              <ToggleControl
+                label="Spaghettification"
+                checked={showSpaghettification}
+                onChange={setShowSpaghettification}
+              />
+              <ToggleControl
+                label="Spaceship Orbiter"
+                checked={showSpaceship}
+                onChange={setShowSpaceship}
+              />
+              <ToggleControl
+                label="Photon Shooter"
+                checked={showPhotonTracer}
+                onChange={setShowPhotonTracer}
               />
             </div>
           </div>
