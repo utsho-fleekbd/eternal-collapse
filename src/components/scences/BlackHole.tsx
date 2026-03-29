@@ -10,6 +10,11 @@ const GravitationalLensRing = lazy(() => import("./GravitationalLensRing"));
 const AccretionDisk = lazy(() => import("./AssertionDisk"));
 const RelativisticJets = lazy(() => import("./RelativisticJets"));
 const FloatingHearts = lazy(() => import("./FloatingHeats"));
+const GeodesicTracer = lazy(() => import("@/components/GeodesicTracer"));
+const GravitationalRedshift = lazy(() => import("@/components/GravitationalRedshift"));
+const SpaghettificationDemo = lazy(() => import("@/components/SpaghettificationDemo"));
+const SpaceshipOrbiter = lazy(() => import("@/components/SpaceshipOrbiter"));
+const PhotonTracer = lazy(() => import("@/components/PhotonTracer"));
 
 export interface BlackHoleParams {
   mass: number;
@@ -21,6 +26,11 @@ export interface BlackHoleParams {
   showGravitationalLensing: boolean;
   showPhotonSphere: boolean;
   showISCO: boolean;
+  showGeodesicTracer: boolean;
+  showRedshift: boolean;
+  showSpaghettification: boolean;
+  showSpaceship: boolean;
+  showPhotonTracer: boolean;
 }
 
 export default function BlackHole(props: BlackHoleParams) {
@@ -31,6 +41,11 @@ export default function BlackHole(props: BlackHoleParams) {
     showPhotonSphere,
     showISCO,
     jetLength,
+    showGeodesicTracer,
+    showRedshift,
+    showSpaghettification,
+    showSpaceship,
+    showPhotonTracer,
   } = props;
   return (
     <div className="fixed inset-0">
@@ -54,6 +69,15 @@ export default function BlackHole(props: BlackHoleParams) {
         <AccretionDisk {...props} />
         <RelativisticJets mass={mass} jetLength={jetLength} />
         <FloatingHearts active={celebrationMode} />
+
+        {/* Tier 1 */}
+        <GeodesicTracer mass={mass} active={showGeodesicTracer} />
+        <GravitationalRedshift mass={mass} visible={showRedshift} />
+        <SpaghettificationDemo mass={mass} active={showSpaghettification} />
+
+        {/* Tier 2 */}
+        <SpaceshipOrbiter mass={mass} active={showSpaceship} />
+        <PhotonTracer mass={mass} active={showPhotonTracer} />
 
         <OrbitControls
           enablePan
