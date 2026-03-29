@@ -69,6 +69,18 @@ const toggleTooltips: Record<string, string> = {
     "Innermost Stable Circular Orbit — the closest stable orbit for matter. Inside this, particles plunge into the event horizon.",
   "Time Dilation Panel":
     "Shows gravitational time dilation τ/t = √(1 − Rₛ/r) at various radii. Clocks tick slower near the event horizon.",
+  "Draggable Clock":
+    "Interactive dual analog clocks — drag the radius slider and watch proper time tick slower near the horizon.",
+  "Geodesic Tracer":
+    "Launch test particles and photons that follow Schwarzschild geodesics. Watch bound orbits, plunges, and scattering.",
+  "Gravitational Redshift":
+    "Colored rings showing how emitted blue light (450nm) is redshifted as it escapes. λ_obs = λ_emit / √(1 − Rₛ/r).",
+  "Spaghettification":
+    "Drop an object toward the black hole. Tidal forces stretch it radially and compress it laterally (ΔF ∝ 2GM·Δr/r³).",
+  "Spaceship Orbiter":
+    "A spacecraft in circular orbit with live proper time vs coordinate time comparison. Move it to different radii.",
+  "Photon Shooter":
+    "Fire photons at different impact parameters. b < b_crit → captured, b ≈ b_crit → orbits, b > b_crit → scattered.",
 };
 
 export default function ControlsHUD(props: ControlsHUDProps) {
@@ -93,6 +105,18 @@ export default function ControlsHUD(props: ControlsHUDProps) {
     setCollapsed,
     showTimeDilation,
     setShowTimeDilation,
+    showDraggableClock,
+    setShowDraggableClock,
+    showGeodesicTracer,
+    setShowGeodesicTracer,
+    showRedshift,
+    setShowRedshift,
+    showSpaghettification,
+    setShowSpaghettification,
+    showSpaceship,
+    setShowSpaceship,
+    showPhotonTracer,
+    setShowPhotonTracer,
   } = props;
 
   const [showInfo, setShowInfo] = useState(false);
