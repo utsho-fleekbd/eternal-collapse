@@ -133,10 +133,10 @@ export default function PhotonTracer({ mass, active }: PhotonTracerProps) {
       {photons.map((p) => {
         if (p.trail.length < 2) return null;
         const geo = new THREE.BufferGeometry().setFromPoints(p.trail);
-        // Color based on fate: captured = red, scattered = green, critical = gold
         const ratio = p.impactParam / bCrit;
         const hue = ratio < 0.95 ? 0 : ratio > 1.05 ? 120 : 45;
         const color = new THREE.Color(`hsl(${hue}, 90%, 60%)`);
+        const mat = new THREE.LineBasicMaterial({ color, transparent: true, opacity: p.alive ? 0.8 : 0.3 });
 
         return (
           <group key={p.id}>
@@ -146,13 +146,7 @@ export default function PhotonTracer({ mass, active }: PhotonTracerProps) {
                 <meshBasicMaterial color={color} />
               </mesh>
             )}
-            <line geometry={geo}>
-              <lineBasicMaterial
-                color={color}
-                transparent
-                opacity={p.alive ? 0.8 : 0.3}
-              />
-            </line>
+            <primitive object={new THREE.Line(geo, mat)} />
           </group>
         );
       })}

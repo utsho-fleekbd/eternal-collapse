@@ -177,14 +177,7 @@ function ParticleTrail({
       )}
       {/* Trail */}
       {lineGeometry && (
-        <line geometry={lineGeometry}>
-          <lineBasicMaterial
-            color={color}
-            transparent
-            opacity={0.6 * fadeColor}
-            linewidth={1}
-          />
-        </line>
+        <primitive object={new THREE.Line(lineGeometry, new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.6 * fadeColor }))} />
       )}
     </group>
   );
